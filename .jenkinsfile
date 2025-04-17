@@ -7,8 +7,8 @@ pipeline {
         stage('Clone') {
             steps {
                 git credentialsId: '1537f611-ed86-4cb3-8715-40cb9fd412f2',
-                url: 'git@github.com:younusFoysal/OSTAD-Assignment-module-3.git',
-                branch: 'main'
+                    url: 'git@github.com:younusFoysal/OSTAD-Assignment-module-3.git',
+                    branch: 'main'
             }
         }
 
@@ -38,7 +38,31 @@ pipeline {
                 }
             }
         }
+    }
 
+    post {
+        success {
+            sh '''
+                curl -H "Content-Type: application/json" \
+                     -X POST \
+                     -d '{
+                         "username": "Jenkins CI",
+                         "content": "✅ Build Successful for *${JOB_NAME}* #${BUILD_NUMBER} on branch *${GIT_BRANCH}*"
+                     }' \
+                     https://discord.com/api/webhooks/1362446031916368074/98H3HlEl-MGUMpHLCvIEN8AZi8l5K5GkdoNyoJiXzw1MMCvuX01bFeXD9nY92XFkTlV-
+            '''
+        }
 
+        failure {
+            sh '''
+                curl -H "Content-Type: application/json" \
+                     -X POST \
+                     -d '{
+                         "username": "Jenkins CI",
+                         "content": "❌ Build Failed for *${JOB_NAME}* #${BUILD_NUMBER} on branch *${GIT_BRANCH}*"
+                     }' \
+                     https://discord.com/api/webhooks/1362446031916368074/98H3HlEl-MGUMpHLCvIEN8AZi8l5K5GkdoNyoJiXzw1MMCvuX01bFeXD9nY92XFkTlV-
+            '''
+        }
     }
 }
