@@ -42,27 +42,28 @@ pipeline {
 
     post {
         success {
-            sh '''
+            sh """
                 curl -H "Content-Type: application/json" \
                      -X POST \
                      -d '{
                          "username": "Jenkins CI",
-                         "content": "✅ Build Successful for *${JOB_NAME}* #${BUILD_NUMBER} on branch *${GIT_BRANCH}*"
+                         "content": "✅ Build Successful for *${env.JOB_NAME}* #${env.BUILD_NUMBER} on branch *${env.GIT_BRANCH}*"
                      }' \
                      https://discord.com/api/webhooks/1362446031916368074/98H3HlEl-MGUMpHLCvIEN8AZi8l5K5GkdoNyoJiXzw1MMCvuX01bFeXD9nY92XFkTlV-
-            '''
+            """
         }
 
         failure {
-            sh '''
+            sh """
                 curl -H "Content-Type: application/json" \
                      -X POST \
                      -d '{
                          "username": "Jenkins CI",
-                         "content": "❌ Build Failed for *${JOB_NAME}* #${BUILD_NUMBER} on branch *${GIT_BRANCH}*"
+                         "content": "❌ Build Failed for *${env.JOB_NAME}* #${env.BUILD_NUMBER} on branch *${env.GIT_BRANCH}*"
                      }' \
                      https://discord.com/api/webhooks/1362446031916368074/98H3HlEl-MGUMpHLCvIEN8AZi8l5K5GkdoNyoJiXzw1MMCvuX01bFeXD9nY92XFkTlV-
-            '''
+            """
         }
     }
+
 }
