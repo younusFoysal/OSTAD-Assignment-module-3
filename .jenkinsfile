@@ -1,0 +1,34 @@
+pipeline {
+    agent {
+        label 'web-app'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git credentialsId: '1537f611-ed86-4cb3-8715-40cb9fd412f2',
+                url: 'git@github.com:younusFoysal/OSTAD-Assignment-module-3.git',
+                branch: 'main'
+            }
+        }
+
+        stage('Install') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    try {
+                        sh 'npm run check'
+                    } catch (err) {
+                        currentBuild.result = 'FAILURE'
+                        throw err
+                    }
+                }
+            }
+        }
+    }
+}
